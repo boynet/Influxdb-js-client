@@ -79,3 +79,8 @@ $(window).load(function () {
         }
     });
 ````
+
+#todo list:
+ - supporting esacped space in key name
+ - supporting sending custom time
+ - supporting for resend faild xhr reuquest
