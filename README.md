@@ -11,7 +11,7 @@ this libary just taking simple data and transform it to [influxdb line protocol]
 
  1. this library transform plain objects into valid line protocol
  2. give you easy way to send points in batch
- 3. easy way of losing at less points as possible by using navigator.sendBeacon when the user leave the page and there is some unsend data
+ 3. easy way of losing at less points as possible by using navigator.sendBeacon when the user leave the page and there is some unsend data(OFF by default)
 
 #how to use?
 include influxdb.min.js in your page:
@@ -55,6 +55,6 @@ you can also use the short verse like:
 
 each point must have at least key and one fields look here for more info: [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
 
-key - string the measurement name
-fields -object { alert=true,reason="value above maximum threshold"2}
-tags - null|object { url : "/index", user_id : 1234 }
+ - key - string the measurement name
+ - fields -object { alert=true,reason="value above maximum threshold"2}
+ - tags - null|object { url : "/index", user_id : 1234 }
