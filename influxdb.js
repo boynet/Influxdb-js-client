@@ -29,8 +29,8 @@ class Influxdb {
         navigator.sendBeacon(this.host, data);
     }
 
-    point(key, fields, tags, time) {
-        return this._addPoint(new Influxdb_Point(key, fields, tags, time));
+    point(key, fields, tags) {
+        return this._addPoint(new Influxdb_Point(key, fields, tags));
     }
 
     _addPoint(point) {
@@ -58,7 +58,7 @@ class Influxdb {
         if (data) {
             var request = new XMLHttpRequest();
             request.open('POST', this.host, true);
-            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            request.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
             request.send(data);
         }
 
