@@ -23,6 +23,8 @@ include influxdb.min.js in your page:
 
 connect to the server:
 
+(its not sending anything just constructing the class)
+
       influxdb = new Influxdb('http://127.0.0.1:8086/write?db=DBNAME',true);
 replace 12.0.0.1 with the ip/url of your influxdb server, change DBNAME whith the name of the db you want send points to;
 
