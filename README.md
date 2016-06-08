@@ -3,7 +3,7 @@ Lightweight library for sending metrics to influxdb in javascirpt
 
 ## why another libray?
 ----------
-the other influxdb js libary are intented to use with node.js, so they are big in size and just to complicated for this simple job.
+the other influxdb js libaries are intented to use with node.js, so they are big in size and just to complicated for this simple job.
 
 this libary just taking simple data and transform it to [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
 
@@ -11,7 +11,8 @@ this libary just taking simple data and transform it to [influxdb line protocol]
 
  1. this library transform plain objects into valid line protocol
  2. give you easy way to send points in batch
- 3. easy way of losing at less points as possible by using navigator.sendBeacon when the user leave the page and there is some unsend data(OFF by default)
+ 3. "lose as less points as possible" by using navigator.sendBeacon when the user leave the page and there is some unsend data(OFF by default)
+ 4. only 2.82 KB minified size
 
 #how to use?
 include influxdb.min.js in your page:
@@ -60,3 +61,21 @@ each point must have at least key and one fields look here for more info: [influ
  - key - string the measurement name
  - fields -object { alert=true,reason="value above maximum threshold"2}
  - tags - null|object { url : "/index", user_id : 1234 }
+ - 
+ 
+#example
+gather some statics about the page loading time and sending it to influxdb:
+````
+influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website',true);
+routeName = "index.html"
+$(window).load(function () {
+        if (typeof window.performance != "undefined") {
+            influxdb.point("page_latency", {value: window.performance.timing.responseStart - window.performance.timing.connectStart}, {'routeName': routeName});
+            influxdb.point("load_time", {value: window.performance.timing.loadEventStart - window.performance.timing.navigationStart}, {'routeName': routeName});
+            if (window.chrome && window.chrome.loadTimes && (Math.round((window.chrome.loadTimes().firstPaintTime * 1000) - (window.chrome.loadTimes().startLoadTime * 1000)) > 0)) {
+                influxdb.point("paint_time", {value: Math.round((window.chrome.loadTimes().firstPaintTime * 1000) - (window.chrome.loadTimes().startLoadTime * 1000))}, {'routeName': routeName});
+            }
+            influxdb.send();
+        }
+    });
+````
