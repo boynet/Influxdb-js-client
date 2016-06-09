@@ -49,9 +49,10 @@ you can also use the short verse like:
     Influxdb.constructor(host, sendPointsOnClose)
 
  - host - should get url to send the points to like: `http://127.0.0.1:8086/write?db=DBNAME`
- - if you db has auth enabled(which should be) apped the username and password according to the docs like `http://127.0.0.1:8086/write?db=DBNAME&u=username&p=password`
- - if you sending custom time with your point append the precision like:
+  - if your db has auth enabled(which should be) apped the username and password according to the docs like `http://127.0.0.1:8086/write?db=DBNAME&u=username&p=password`
+  - if you sending custom time with your point append the precision like:
  `http://127.0.0.1:8086/write?db=DBNAME&u=username&p=password&precision=ms` possible values are `precision=[n,u,ms,s,m,h]` for nanoseconds, microseconds, milliseconds, seconds, minutes, and hours, respectively. if you use Date.now() as time than use `&precision=ms`
+ - for full list option please see the docs for [http write synax](https://docs.influxdata.com/influxdb/v0.13/write_protocols/write_syntax/#http)
  - sendPointsOnClose (default: false) - if set to true than if for some reason there is a points that added to the batch but was no sent yet to the server it will send the points using the new api `navigator.sendBeacon` if you want to use it in old browser please include the polyfill https://github.com/miguelmota/Navigator.sendBeacon 
  
 
@@ -63,7 +64,7 @@ each point must have at least key and one fields look here for more info: [influ
  - key - string the measurement name
  - fields -object { alert=true,reason="value above maximum threshold"2}
  - tags - null|object { url : "/index", user_id : 1234 }
- - the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor
+ - time - the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor)
 
 #Security
 always use this libary with [Authentication and Authorization](https://docs.influxdata.com/influxdb/v0.13/administration/authentication_and_authorization/) .
@@ -99,5 +100,4 @@ $(window).load(function () {
 
 #TODO list:
 - [ ] supporting esacped space in key name
-- [ ] supporting sending custom time
 - [ ] supporting for resend faild xhr reuquest
