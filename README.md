@@ -72,7 +72,7 @@ create a new user with only `WRITE` privilege for the `website_public` DB.
 now connect to the influxdb server and append the above created user and password to the url like:
 `http://127.0.0.1:8086/write?db=website_public&u=username&p=password`
 
-**pay attention!** always monitor your influxdb server for memory usage as this libary allow anyone to flood your server with unwanted tags and each tag taking some memory according to the docs low hardware server can handle only 100,000 tags.
+**pay attention!** always monitor your influxdb server for memory usage as this libary allow anyone to flood your server with unwanted tags [according to the docs](https://docs.influxdata.com/influxdb/v0.13/guides/hardware_sizing/) low hardware server can handle only 100,000 tags.
 and never trust the data you get
 
  
