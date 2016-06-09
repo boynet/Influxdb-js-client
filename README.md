@@ -70,12 +70,14 @@ influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website',true);
 routeName = "index.html"
 $(window).load(function () {
         if (typeof window.performance != "undefined") {
-            influxdb.point("page_latency", {value: window.performance.timing.responseStart - window.performance.timing.connectStart}, {'routeName': routeName});
-            influxdb.point("load_time", {value: window.performance.timing.loadEventStart - window.performance.timing.navigationStart}, {'routeName': routeName});
-            if (window.chrome && window.chrome.loadTimes && (Math.round((window.chrome.loadTimes().firstPaintTime * 1000) - (window.chrome.loadTimes().startLoadTime * 1000)) > 0)) {
-                influxdb.point("paint_time", {value: Math.round((window.chrome.loadTimes().firstPaintTime * 1000) - (window.chrome.loadTimes().startLoadTime * 1000))}, {'routeName': routeName});
-            }
+
+            var page_latency = window.performance.timing.responseStart - window.performance.timing.connectStart;
+            var load_time = window.performance.timing.loadEventStart - window.performance.timing.navigationStart;
+
+            influxdb.point("page_latency", {value: page_latency}, {'routeName': routeName});
+            influxdb.point("load_time", {value: load_time}, {'routeName': routeName});
             influxdb.send();
+            
         }
     });
 ````
