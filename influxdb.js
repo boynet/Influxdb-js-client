@@ -11,19 +11,22 @@ class Influxdb {
     registerUnloadEvent() {
         var _self = this;
         //need both events to work in chrome http://stackoverflow.com/a/20322988/1368683
-        window.addEventListener('unload', _self.sendBeacon, false);
+        window.addEventListener('unload', function (e) {
+            _self.sendBeacon(_self);
+        }, false);
         window.onbeforeunload = function (e) {
-            _self.sendBeacon();
+            _self.sendBeacon(_self);
         };
     }
 
-    sendBeacon() {
+    sendBeacon(_self) {
         //need this polyfill https://github.com/miguelmota/Navigator.sendBeacon
-        if (this.points.length == 0) return;
-        if (this.beaconSent) return;
-        this.beaconSent = true;
-        var data = this.implodePoints();
-        navigator.sendBeacon(this.host, data);
+        if (_self.beaconSent) return;
+        if (_self.points && _self.points.length == 0) return;
+        _self.beaconSent = true;
+        if (!navigator && !navigator.sendBeacon) return;
+        var data = _self.implodePoints();
+        navigator.sendBeacon(_self.host, data);
     }
 
     point(key, fields, tags, time) {
@@ -39,14 +42,12 @@ class Influxdb {
 
     implodePoints() {
         if (this.points.length == 0) return '';
-        var index, data = '', _data = '';
+        var index, data = '';
         for (index = 0; index < this.points.length; ++index) {
-            if (!this.points[index].isValid()){
-                this.points.slice(index,1);
+            if (!this.points[index].isValid()) {
+                this.points.slice(index, 1);
                 continue;
             }
-            _data = this.points[index].getLine();
-            if (index > 0 && data) data = data + '\n';
             data = data + this.points[index].getLine();
         }
         return data;
@@ -78,7 +79,7 @@ class Influxdb_Point {
 
     }
 
-    isValid(){
+    isValid() {
         if (!this.key || !this.fields) return false;
         return true;
     }
@@ -95,6 +96,7 @@ class Influxdb_Point {
         if (this.time) {
             this.line = this.line + ' ' + this.time;
         }
+        this.line = this.line + '\n';
         return this.line;
     }
 
