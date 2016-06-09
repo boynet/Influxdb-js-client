@@ -1,20 +1,20 @@
 # Influxdb-js-client
 Lightweight library for sending metrics to influxdb in javascirpt
 
-## why another libray?
+## Why another libray?
 ----------
 the other influxdb js libaries are intented to use with node.js, so they are big in size and just to complicated for this simple job.
 
 this libary just taking simple data and transform it to [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
 
-## what's the difference between this libary and sending simple xhr?
+## What's the difference between this libary and sending simple xhr?
 
  1. this library transform plain objects into valid line protocol
  2. give you easy way to send points in batch
  3. "lose as less points as possible" by using navigator.sendBeacon when the user leave the page and there is some unsend data(OFF by default)
  4. only 2.82 KB minified size
 
-#how to use?
+#How to use?
 include influxdb.min.js in your page:
 
 *the unminifed version is in es6 if you want to use the unminifed version than you need to transform the code to es5 using [babel](https://babeljs.io/repl/)
@@ -44,11 +44,12 @@ you can also use the short verse like:
     influxdb.point('key',{value:1},{tag:'tag_name'}).send();
 
 
-#api
+#Api
 
     Influxdb.constructor(host, sendPointsOnClose, sendOnInsert)
 
  - host - should get url to send the points to like: `http://127.0.0.1:8086/write?db=DBNAME`
+ - if you db has auth enabled(which should be) apped the username and password according to the docs like `http://127.0.0.1:8086/write?db=DBNAME&u=username&p=password`
  - sendPointsOnClose (default: false) - if set to true than if for some reason there is a points that added to the batch but was no sent yet to the server it will send the points using the new api `navigator.sendBeacon` if you want to use it in old browser please include the polyfill https://github.com/miguelmota/Navigator.sendBeacon 
  - sendOnInsert (default: false) - if set to true than it will automatically send point to the server after calling `.point()` so no need to use the `.send()` command after inserting point.
  
@@ -61,9 +62,21 @@ each point must have at least key and one fields look here for more info: [influ
  - key - string the measurement name
  - fields -object { alert=true,reason="value above maximum threshold"2}
  - tags - null|object { url : "/index", user_id : 1234 }
- - 
+
+#Security
+always use this libary with [Authentication and Authorization](https://docs.influxdata.com/influxdb/v0.13/administration/authentication_and_authorization/) .
+create a new database for public data for example named `website_public`.
+
+create a new user with only `WRITE` privilege for the `website_public` DB.
+
+now connect to the influxdb server and append the above created user and password to the url like:
+`http://127.0.0.1:8086/write?db=website_public&u=username&p=password`
+
+**pay attention!** always monitor your influxdb server for memory usage as this libary allow anyone to flood your server with unwanted tags and each tag taking some memory according to the docs low hardware server can handle only 100,000 tags.
+and never trust the data you get
+
  
-#example
+#Example
 gather some statics about the page loading time and sending it to influxdb:
 ````
 influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website',true);
@@ -82,7 +95,7 @@ $(window).load(function () {
     });
 ````
 
-#todo list:
- - supporting esacped space in key name
- - supporting sending custom time
- - supporting for resend faild xhr reuquest
+#TODO list:
+- [ ] supporting esacped space in key name
+- [ ] supporting sending custom time
+- [ ] supporting for resend faild xhr reuquest
