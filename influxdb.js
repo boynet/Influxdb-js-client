@@ -1,9 +1,6 @@
 class Influxdb {
-    constructor(host, sendPointsOnClose, sendOnInsert) {
-        if (typeof sendPointsOnClose == 'undefined') this.sendPointsOnClose = false;
-        if (typeof sendOnInsert == 'undefined') this.sendOnInsert = false;
+    constructor(host, sendPointsOnClose) {
         this.sendPointsOnClose = sendPointsOnClose;
-        this.sendOnInsert = sendOnInsert;
         this.host = host;
         this.points = [];
         this.beaconSent = false;
@@ -29,22 +26,25 @@ class Influxdb {
         navigator.sendBeacon(this.host, data);
     }
 
-    point(key, fields, tags) {
-        return this._addPoint(new Influxdb_Point(key, fields, tags));
+    point(key, fields, tags, time) {
+        return this._addPoint(new Influxdb_Point(key, fields, tags, time));
     }
 
     _addPoint(point) {
-        if (point.isValid) {
+        if (point.isValid()) {
             this.points.push(point);
-            if (this.sendOnInsert) this.send();
         }
         return this;
     }
 
     implodePoints() {
         if (this.points.length == 0) return '';
-        var index, data='', _data = '';
+        var index, data = '', _data = '';
         for (index = 0; index < this.points.length; ++index) {
+            if (!this.points[index].isValid()){
+                this.points.slice(index,1);
+                continue;
+            }
             _data = this.points[index].getLine();
             if (index > 0 && data) data = data + '\n';
             data = data + this.points[index].getLine();
@@ -75,12 +75,12 @@ class Influxdb_Point {
         if (typeof fields !== 'undefined' && !this.isEmpty(fields)) this.fields = fields;
         if (typeof tags !== 'undefined' && !this.isEmpty(fields)) this.tags = tags;
         if (typeof time !== 'undefined') this.time = time;
-        if (!this.key || !this.fields) {
-            this.isValid = false;
-        } else {
-            this.isValid = true;
-        }
 
+    }
+
+    isValid(){
+        if (!this.key || !this.fields) return false;
+        return true;
     }
 
     getLine() {
