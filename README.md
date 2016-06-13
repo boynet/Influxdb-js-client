@@ -12,7 +12,7 @@ this libary just taking simple data and transform it to [influxdb line protocol]
  1. this library transform plain objects into valid line protocol
  2. give you easy way to send points in batch
  3. "lose as less points as possible" by using navigator.sendBeacon when the user leave the page and there is some unsend data(OFF by default)
- 4. only 2.82 KB minified size
+ 4. only 2.73 KB minified size
 
 #How to use?
 include influxdb.min.js in your page:
