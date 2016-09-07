@@ -61,10 +61,10 @@ you can also use the short verse like:
 
 each point must have at least key and one fields look here for more info: [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
 
- - key - string the measurement name
- - fields - object { alert=true,reason="value above maximum threshold"2}
- - tags - null|object { url : "/index", user_id : 1234 }
- - time - string|number the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor, Date.now() = ms precision)
+ - key - `string` the measurement name
+ - fields - `object` { alert=true,reason="value above maximum threshold"2}
+ - tags - `null|object` { url : "/index", user_id : 1234 }
+ - time - `null|string|number` the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor, Date.now() = ms precision)
 
 #Security
 always use this libary with [Authentication and Authorization](https://docs.influxdata.com/influxdb/v0.13/administration/authentication_and_authorization/) .
