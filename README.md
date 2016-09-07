@@ -27,7 +27,7 @@ connect to the server:
 (its not sending anything just constructing the class)
 
       influxdb = new Influxdb('http://127.0.0.1:8086/write?db=DBNAME',true);
-replace 12.0.0.1 with the ip/url of your influxdb server, change DBNAME with the name of the db you want send points to;
+replace 127.0.0.1 with the ip/url of your influxdb server, change DBNAME with the name of the db you want send points to;
 
 insert points:
 
@@ -53,7 +53,7 @@ you can also use the short verse like:
   - if you sending custom time with your point append the precision like:
  `http://127.0.0.1:8086/write?db=DBNAME&u=username&p=password&precision=ms` possible values are `precision=[n,u,ms,s,m,h]` for nanoseconds, microseconds, milliseconds, seconds, minutes, and hours, respectively. if you use Date.now() as time than use `&precision=ms`
  - for full list option please see the docs for [http write synax](https://docs.influxdata.com/influxdb/v0.13/write_protocols/write_syntax/#http)
- - sendPointsOnClose (default: false) - if set to true than if for some reason there is a points that added to the batch but was no sent yet to the server it will send the points using the new api `navigator.sendBeacon` if you want to use it in old browser please include the polyfill https://github.com/miguelmota/Navigator.sendBeacon 
+ - sendPointsOnClose (default: false) - if set to true than if for some reason there is a points that added to the batch but was no sent yet to the server and the user close the tab\browser it will send the points using the new api `navigator.sendBeacon` if you want to use it in old browser please include the polyfill https://github.com/miguelmota/Navigator.sendBeacon 
  
 
 
@@ -62,9 +62,9 @@ you can also use the short verse like:
 each point must have at least key and one fields look here for more info: [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
 
  - key - string the measurement name
- - fields -object { alert=true,reason="value above maximum threshold"2}
+ - fields - object { alert=true,reason="value above maximum threshold"2}
  - tags - null|object { url : "/index", user_id : 1234 }
- - time - the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor)
+ - time - string|number the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor, Date.now() = ms precision)
 
 #Security
 always use this libary with [Authentication and Authorization](https://docs.influxdata.com/influxdb/v0.13/administration/authentication_and_authorization/) .
@@ -76,27 +76,34 @@ now connect to the influxdb server and append the above created user and passwor
 `http://127.0.0.1:8086/write?db=website_public&u=username&p=password`
 
 **pay attention!** always monitor your influxdb server for memory usage as this libary allow anyone to flood your server with unwanted tags [according to the docs](https://docs.influxdata.com/influxdb/v0.13/guides/hardware_sizing/) low hardware server can handle only 100,000 tags.
-and never trust the data you get
+never blindly trust the data you get
 
  
 #Example
-gather some statics about the page loading time and sending it to influxdb:
+Gather some statics about the page loading time and sending it to influxdb with same timestamp:
 ````
-influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website',true);
-routeName = "index.html"
+influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website&precision=ms',true);
+
+var url = encodeURIComponent(window.location.pathname+window.location.search);
+time = Date.now();
+
+influxdb.point("pageview", {value: 1}, {url: url}, time);
+
 $(window).load(function () {
         if (typeof window.performance != "undefined") {
 
             var page_latency = window.performance.timing.responseStart - window.performance.timing.connectStart;
             var load_time = window.performance.timing.loadEventStart - window.performance.timing.navigationStart;
 
-            influxdb.point("page_latency", {value: page_latency}, {'routeName': routeName});
-            influxdb.point("load_time", {value: load_time}, {'routeName': routeName});
+            influxdb.point("page_latency", {value: page_latency}, {url: url}, time);
+            influxdb.point("load_time", {value: load_time}, {url: url}, time);
             influxdb.send();
             
         }
     });
 ````
+
+Although we didn't send the 'pageview' point only after window.load is fired, if for some reason the user exit the website before the event is fired the point will sent anyway due to our usage of `sendPointsOnClose` (second argument on the constructer)
 
 #TODO list:
 - [ ] supporting esacped space in key name
