@@ -82,7 +82,7 @@ never blindly trust the data you get
 #Example
 Gather some statics about the page loading time and sending it to influxdb with same timestamp:
 ````
-influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website&precision=ms',true);
+influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website&u=website_public&p=12341234&precision=ms',true);
 
 var url = encodeURIComponent(window.location.pathname+window.location.search);
 time = Date.now();
