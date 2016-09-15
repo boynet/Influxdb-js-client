@@ -91,20 +91,19 @@ Gather some statics about the page loading time and sending it to influxdb with 
 influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website&u=website_public&p=12341234&precision=ms',true);
 
 var url = encodeURIComponent(window.location.pathname+window.location.search);
-time = Date.now();
+var time = Date.now();
 
 influxdb.point("pageview", {value: 1}, {url: url}, time);
 
 $(window).load(function () {
         if (typeof window.performance != "undefined") {
-
             var page_latency = window.performance.timing.responseStart - window.performance.timing.connectStart;
             var load_time = window.performance.timing.loadEventStart - window.performance.timing.navigationStart;
 
             influxdb.point("page_latency", {value: page_latency}, {url: url}, time);
             influxdb.point("load_time", {value: load_time}, {url: url}, time);
-            influxdb.send();
             
+            influxdb.send();
         }
     });
 ```
