@@ -18,35 +18,41 @@ this libary just taking simple data and transform it to [influxdb line protocol]
 include influxdb.min.js in your page:
 
 *the unminifed version is in es6 if you want to use the unminifed version than you need to transform the code to es5 using [babel](https://babeljs.io/repl/)
-
-    <script src="{{ asset('/js/influxdb.min.js') }}"></script>
-
+```html
+<script src="{{ asset('/js/influxdb.min.js') }}"></script>
+```
 
 connect to the server:
 
 (its not sending anything just constructing the class)
-
-      influxdb = new Influxdb('http://127.0.0.1:8086/write?db=DBNAME',true);
+```javascript
+influxdb = new Influxdb('http://127.0.0.1:8086/write?db=DBNAME',true);
+```
 replace 127.0.0.1 with the ip/url of your influxdb server, change DBNAME with the name of the db you want send points to;
 
 insert points:
-
-     influxdb.point('key',{value:1},{tag:'tag_name'});
-     influxdb.point('key',{value:2,other_value:3},{tag:'tag_name',othertag:'some_value'});
-
+```javascript
+influxdb.point('key',{value:1},{tag:'tag_name'});
+influxdb.point('key',{value:2,other_value:3},{tag:'tag_name',othertag:'some_value'});
+```
 send the points:
 
-    influxdb.send();
+```javascript
+influxdb.send();
+```
 
 
 you can also use the short verse like:
 
-    influxdb.point('key',{value:1},{tag:'tag_name'}).send();
-
+```javascript
+influxdb.point('key',{value:1},{tag:'tag_name'}).send();
+```
 
 #Api
 
-    Influxdb.constructor(host, sendPointsOnClose)
+```javascript
+Influxdb.constructor(host, sendPointsOnClose)
+```
 
  - host - should get url to send the points to like: `http://127.0.0.1:8086/write?db=DBNAME`
   - if your db has auth enabled(which should be) apped the username and password according to the docs like `http://127.0.0.1:8086/write?db=DBNAME&u=username&p=password`
@@ -81,7 +87,7 @@ never blindly trust the data you get
  
 #Example
 Gather some statics about the page loading time and sending it to influxdb with same timestamp:
-````
+```javascript
 influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website&u=website_public&p=12341234&precision=ms',true);
 
 var url = encodeURIComponent(window.location.pathname+window.location.search);
@@ -101,7 +107,7 @@ $(window).load(function () {
             
         }
     });
-````
+```
 
 Although we didn't send the 'pageview' point only after window.load is fired, if for some reason the user exit the website before the event is fired the point will sent anyway due to our usage of `sendPointsOnClose` (second argument on the constructer)
 
