@@ -3,7 +3,7 @@ Lightweight library for sending metrics to influxdb in javascirpt
 
 ## Why another libray?
 ----------
-the others influxdb js libaries are intented to use with node.js, so they are big in size and just to complicated for this simple job.
+Others influxdb js libaries are intented to use with node.js, so they are big in size and just to complicated for this simple job.
 
 this libary just taking simple data and transform it to [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
 
