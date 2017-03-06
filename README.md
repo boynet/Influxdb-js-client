@@ -19,7 +19,7 @@ include influxdb.min.js in your page:
 
 *the unminifed version is in es6 if you want to use the unminifed version than you need to transform the code to es5 using [babel](https://babeljs.io/repl/)
 ```html
-<script src="{{ asset('/js/influxdb.min.js') }}"></script>
+<script src="/js/influxdb.min.js"></script>
 ```
 
 connect to the server:
