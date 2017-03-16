@@ -75,13 +75,12 @@ each point must have at least key and one fields look here for more info: [influ
  - tags - `null|object` { url : "/index", user_id : 1234 }
  - time - `null|string|number` the time in which the data happend (if you use custom time than dont forget to add the precision to influxdb constructor, Date.now() = ms precision)
 
-#Security
-always use this libary with [Authentication and Authorization](https://docs.influxdata.com/influxdb/v0.13/administration/authentication_and_authorization/) .
-create a new database for public data for example named `website_public`.
+# Security
+always use this libary with [Authentication and Authorization](https://docs.influxdata.com/influxdb/v0.13/administration/authentication_and_authorization/).
 
-create a new user with only `WRITE` privilege for the `website_public` DB.
-
-now connect to the influxdb server and append the above created user and password to the url like:
++ create a new database for public data for example named `website_public`.
++ create a new user with only `WRITE` privilege for the `website_public` DB.
++ connect to the influxdb server and append the above created user and password to the host url like:
 `http://127.0.0.1:8086/write?db=website_public&u=username&p=password`
 
 **pay attention!** always monitor your influxdb server for memory usage as this libary allow anyone to flood your server with unwanted tags [according to the docs](https://docs.influxdata.com/influxdb/v0.13/guides/hardware_sizing/) low hardware server can handle only 100,000 tags.
