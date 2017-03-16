@@ -51,7 +51,7 @@ you can also use the short verse like:
 influxdb.point('key',{value:1},{tag:'tag_name'}).send();
 ```
 
-#Api
+# Api
 
 ```javascript
 Influxdb.constructor(host, sendPointsOnClose)
@@ -88,7 +88,7 @@ now connect to the influxdb server and append the above created user and passwor
 never blindly trust the data you get
 
  
-#Example
+# Example
 Gather some statics about the page loading time and sending it to influxdb with same timestamp:
 ```javascript
 influxdb = new Influxdb('http://127.0.0.1:8086/write?db=website&u=website_public&p=12341234&precision=ms',true);
@@ -113,6 +113,6 @@ $(window).load(function () {
 
 Although we didn't send the 'pageview' point only after window.load is fired, if for some reason the user exit the website before the event is fired the point will sent anyway due to our usage of `sendPointsOnClose` (second argument on the constructer)
 
-#TODO list:
+# TODO list:
 - [ ] supporting esacped space in key name
 - [ ] supporting for resend faild xhr reuquest
