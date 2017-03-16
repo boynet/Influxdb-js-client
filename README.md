@@ -1,8 +1,10 @@
 # Influxdb js client
 Lightweight library for sending metrics to influxdb in javascirpt
 
-## Why another libray?
 ----------
+
+## Why another libray?
+
 Others influxdb js libaries are intented to use with node.js, so they are big in size and just to complicated for this simple job.
 
 this libary just taking simple data and transform it to [influxdb line protocol](https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/)
@@ -12,9 +14,10 @@ this libary just taking simple data and transform it to [influxdb line protocol]
  1. this library transform plain objects into valid line protocol
  2. give you easy way to send points in batch
  3. "lose as less points as possible" by using navigator.sendBeacon when the user leave the page and there is some unsend data(OFF by default)
- 4. only 2.73 KB minified size
+ 4. only **2 KB minified** size
 
-#How to use?
+# How to use?
+
 include influxdb.min.js in your page:
 
 *the unminifed version is in es6 if you want to use the unminifed version than you need to transform the code to es5 using [babel](https://babeljs.io/repl/)
