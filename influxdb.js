@@ -127,6 +127,7 @@ class Influxdb_Point {
                     //On spacing assume text
                     value = value.replace(/[\{\}\(\)\*\+\?\,\\\^\$\|\=\+]/g, "\\$&");
                     value = value.replace(/\s+/g, '\\ ');
+                }
                 i++;
                 if (i > 1) str = str + ',';
                 str += key + '=' + value;
