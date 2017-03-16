@@ -122,7 +122,11 @@ class Influxdb_Point {
                 //todo: right now not supporting space in tags where it should be support with back slash
                 key = key.replace(/\s+/g, '');
                 value = obj[key].toString();
-                value = value.replace(/\s+/g, '');
+                //Initial escaping including urls
+                if (/\s+/g.test(value) || /[\-\[\]\/\{\}\(\)\*\+\?\,\.\\\^\$\|]/g.test(value)){
+                    //On spacing assume text
+                    value = value.replace(/[\{\}\(\)\*\+\?\,\\\^\$\|\=\+]/g, "\\$&");
+                    value = value.replace(/\s+/g, '\\ ');
                 i++;
                 if (i > 1) str = str + ',';
                 str += key + '=' + value;
