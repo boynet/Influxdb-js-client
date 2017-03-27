@@ -125,7 +125,7 @@ class Influxdb_Point {
                 //Initial escaping including urls
                 if (/\s+/g.test(value) || /[\-\[\]\/\{\}\(\)\*\+\?\,\.\\\^\$\|]/g.test(value)){
                     //On spacing assume text
-                    value = value.replace(/[\{\}\(\)\*\+\?\,\\\^\$\|\=\+]/g, "\\$&");
+                    value = value.replace(/[\,\=]/g, "\\$&");
                     value = value.replace(/\s+/g, '\\ ');
                 }
                 i++;
