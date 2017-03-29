@@ -123,6 +123,7 @@ class Influxdb_Point {
                 key = key.replace(/\s+/g, '');
                 value = obj[key].toString();
                 //Initial escaping including urls
+                //todo: improve string recognition
                 if (/\s+/g.test(value) || /[\-\[\]\/\{\}\(\)\*\+\?\,\.\\\^\$\|]/g.test(value)){
                     //On spacing assume text
                     value = value.replace(/[\,\=]/g, "\\$&");
